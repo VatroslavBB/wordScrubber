@@ -1,8 +1,17 @@
 import sys
-from PySide6.QtCore import QRect
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtWidgets import QApplication
 from widget import Widget
+from textRemoval import scrubImage, cv2
+import os
+
+def handleScrubbing(pic):
+    pic.save("screenshot.png")
+    image = cv2.imread("screenshot.png")
+    scrubImage(image)
+    os.remove("screenshot.png")
+    return None
+    
 
 def captureSelectedArea(rect):
     screen = QGuiApplication.screenAt(rect.center())
@@ -23,8 +32,9 @@ def captureSelectedArea(rect):
     if pic.isNull():
         print("Failed to capture the selected area.")
         return
-    pic.save("screenshot.png")
+    handleScrubbing(pic)
     print("Selected area captured and saved as screenshot.png")
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
