@@ -2,11 +2,16 @@ import numpy as np
 import cv2
 from datetime import datetime
 from pathlib import Path
+import sys
 
+
+def resource_path(relative_path: str) -> str:
+    if hasattr(sys, "_MEIPASS"):
+        return str(Path(sys._MEIPASS) / relative_path)
+    return str(Path(__file__).resolve().parent / relative_path)
 
 def resizeImage(num):
     return max(32, (num // 32) * 32)
-
 
 def scrubImage(image) -> None:
     image = cv2.resize(image, (resizeImage(image.shape[1]), resizeImage(image.shape[0])))
@@ -16,7 +21,7 @@ def scrubImage(image) -> None:
     
     inputSize = (image.shape[1], image.shape[0])
     
-    textDetectorDB50 = cv2.dnn_TextDetectionModel_DB(r"models/DB50.onnx")
+    textDetectorDB50 = cv2.dnn_TextDetectionModel_DB(resource_path("models/DB50.onnx"))
     
     bin_thresh = 0.3
     poly_thresh = 0.5
