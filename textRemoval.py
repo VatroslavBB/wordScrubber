@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 from datetime import datetime
+from pathlib import Path
 
 
 def resizeImage(num):
@@ -32,8 +33,11 @@ def scrubImage(image) -> None:
         cv2.polylines(annotated_db50_image, [np.array(box, np.int32)], isClosed=True, color=(0, 0, 255), thickness=1)
 
     inpainted_db50_image = cv2.inpaint(orig_db50_image, inpaint_mask_db50, inpaintRadius=5, flags=cv2.INPAINT_NS)
+    
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    cv2.imwrite(f"helper/output/screen_{timestamp}.jpg", inpainted_db50_image)
+    outputDir = Path.home() / "Desktop" / "WordScrubberImg"
+    outputDir.mkdir(parents=True, exist_ok=True)
+    cv2.imwrite(str(outputDir / f"screen_{timestamp}.jpg"), inpainted_db50_image)
 
     return None
 
