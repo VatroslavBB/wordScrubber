@@ -28,7 +28,6 @@ def captureSelectedArea(rect):
     if screen is None:
         screen = QGuiApplication.primaryScreen()
     if screen is None:
-        print("No screen found for the selected area.")
         return
     
     geometry = screen.geometry()
@@ -40,10 +39,8 @@ def captureSelectedArea(rect):
 
     pic = screen.grabWindow(0, x, y, width, height)
     if pic.isNull():
-        print("Failed to capture the selected area.")
         return
     handleScrubbing(pic)
-    print("Selected area captured and saved as screenshot.png")
 
 def globalShortcut(bridge):
 
@@ -65,7 +62,7 @@ if __name__ == "__main__":
     widget = Widget()
     bridge = Bridge()
     widget.startedSelecting.connect(lambda rect: captureSelectedArea(rect))
-    widget.cancelledSelecting
+    widget.cancelledSelecting.connect(lambda: None)
     bridge.triggerScrub.connect(widget.start)
     listener = globalShortcut(bridge)
     sys.exit(app.exec())
